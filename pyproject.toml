@@ -3,8 +3,8 @@ requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "GuineaPigWrapper_ccaliari"
-version = "0.0.4"
+name = "gpbeam"
+version = "0.0.3"
 authors = [
   { name="Conrad Caliari", email="conrad.caliari@cern.ch" },
 ]
@@ -22,5 +22,5 @@ license = "GPL-3.0-only"
 license-files = ["LICENSE*"]
 
 [project.urls]
-Homepage = "https://github.com/cc97nitu/GuineaPig_Wrapper"
-Issues = "https://github.com/cc97nitu/GuineaPig_Wrapper/issues"
+Homepage = "https://github.com/cc97nitu/gpbeam"
+Issues = "https://github.com/cc97nitu/gpbeam/issues"

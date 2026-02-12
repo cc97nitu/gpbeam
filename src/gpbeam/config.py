@@ -9,7 +9,7 @@ config_file = config_dir / "config.toml"
 
 def load_config():
     if not config_file.exists():
-        return {"WORKDIR": "/dev/shm/", "EXECUTABLE_GUINEA_PLUSPLUS": "/opt/SimulationCodes/guinea-pig/bin/guinea", "EXECUTABLE_GUINEA_LEGACY": "guinea"}
+        return {"WORKDIR": "/dev/shm/", "EXECUTABLE_GUINEA_PLUSPLUS": "/opt/SimulationCodes/guinea-pig/bin/guinea"}
     return tomllib.loads(config_file.read_text())
 
 config = load_config()
@@ -29,12 +29,6 @@ def EXECUTABLE_GUINEA_PLUSPLUS():
     except KeyError:
         raise ValueError("invalid configuration for EXECUTABLE_GUINEA_PLUSPLUS")
 
-def EXECUTABLE_GUINEA_LEGACY():
-    try:
-        return config["EXECUTABLE_GUINEA_LEGACY"]
-    except KeyError:
-        raise ValueError("invalid configuration for EXECUTABLE_GUINEA_LEGACY")
-
 
 ##########################
 ### debug
@@ -42,4 +36,3 @@ def EXECUTABLE_GUINEA_LEGACY():
 if __name__ == "__main__":
     print("WORKDIR: ", WORKDIR)
     print("EXECUTABLE_GUINEA_PLUSPLUS: ", EXECUTABLE_GUINEA_PLUSPLUS())
-    print("EXECUTABLE_GUINEA_LEGACY: ", EXECUTABLE_GUINEA_LEGACY())
