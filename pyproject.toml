@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GuineaPigWrapper_ccaliari"
+version = "0.0.4"
+authors = [
+  { name="Conrad Caliari", email="conrad.caliari@cern.ch" },
+]
+description = "Python wrapper for the Guinea-Pig code simulating collisions of charged particle beams."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "numpy>=2.0", "scipy>=1.16", "platformdirs>4.5",
+]
+license = "GPL-3.0-only"
+license-files = ["LICENSE*"]
+
+[project.urls]
+Homepage = "https://github.com/cc97nitu/GuineaPig_Wrapper"
+Issues = "https://github.com/cc97nitu/GuineaPig_Wrapper/issues"

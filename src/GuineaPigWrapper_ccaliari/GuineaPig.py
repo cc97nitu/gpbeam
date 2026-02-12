@@ -3,16 +3,14 @@ import re
 import time
 import shutil
 import subprocess
-import itertools
-import atexit
-
 import numpy as np
-#from scipy.stats import truncnorm
+
+from scipy.stats import truncnorm
 
 ##########################
 ### general config
 ##########################
-WORKDIR = os.path.dirname("/dev/shm/workdir_guinea/")
+from .config import WORKDIR, EXECUTABLE_GUINEA_PLUSPLUS, EXECUTABLE_GUINEA_LEGACY
 
 
 ##########################
@@ -319,7 +317,7 @@ class GuineaPig(object):
 
     def __enter__(self):
         id = abs(hash((self.unique_id, time.time())))
-        self.WORKDIR = os.path.normpath(WORKDIR +"_" + str(id))
+        self.WORKDIR = os.path.normpath(WORKDIR +"/workdir_guinea_" + str(id))
         os.makedirs(self.WORKDIR, exist_ok=False)
 
         self._in_context = True
@@ -378,7 +376,7 @@ class GuineaPig(object):
         # call guinea <- guinea seems to read from stdin always as interactive program <- feed it with fake stdin
         with open(os.devnull, "r") as nullin:
             result = subprocess.run(
-                ["guinea", accelerator, "default", os.path.join(self.WORKDIR, "result.out")],
+                [EXECUTABLE_GUINEA_LEGACY(), accelerator, "default", os.path.join(self.WORKDIR, "result.out")],
                 stdin=nullin,
                 stdout=subprocess.PIPE,    # Capture stdout
                 stderr=subprocess.STDOUT,  # Capture stderr too
@@ -420,7 +418,7 @@ class GuineaPig(object):
         # call guinea <- guinea seems to read from stdin always as interactive program <- feed it with fake stdin
         with open(os.devnull, "r") as nullin:
             result = subprocess.run(
-                ["/opt/SimulationCodes/guinea-pig/bin/guinea", accelerator, "default", os.path.join(self.WORKDIR, "g++_result.out")],
+                [EXECUTABLE_GUINEA_PLUSPLUS(), accelerator, "default", os.path.join(self.WORKDIR, "g++_result.out")],
                 stdin=nullin,
                 stdout=subprocess.PIPE,    # Capture stdout
                 stderr=subprocess.STDOUT,  # Capture stderr too
