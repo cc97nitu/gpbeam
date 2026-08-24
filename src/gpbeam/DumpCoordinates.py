@@ -58,7 +58,7 @@ def sampleGaussianWaist(accelerator: AcceleratorConfig, cut: int = 3, N: int = 1
     """
     Sample Gaussian waist particle distributions from an AcceleratorConfig.
     """
-    no_particles = int( 2**17 )
+    no_particles = int( 2**N )
 
     betx_1 = accelerator.beta_x[0] * 1e3  # mm → µm
     betx_2 = accelerator.beta_x[1] * 1e3

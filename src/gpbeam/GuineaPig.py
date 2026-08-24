@@ -278,7 +278,7 @@ class GuineaPig:
             np_1 = dump_coordinates(cur_workdir, particles_1,positron=False)
             np_2 = dump_coordinates(cur_workdir, particles_1,positron=True)
         elif particles_1 is None and particles_2 is None:
-            particles_1, particles_2 = sampleGaussianWaist(self.accelerator)
+            particles_1, particles_2 = sampleGaussianWaist(self.accelerator, N=17)
 
             np_1 = dump_coordinates(cur_workdir, particles_1,positron=False)
             np_2 = dump_coordinates(cur_workdir, particles_2,positron=True)
