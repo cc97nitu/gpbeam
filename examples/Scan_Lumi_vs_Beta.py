@@ -27,13 +27,13 @@ def max_beamsize(beta, ex, l):
 # accerlerator setup
 acc = gp.AcceleratorConfig(
     particles=(2,2),
-    energy=(190,190),
-    espread=(1.24e-3,0.7e-3),
-    emitt_x=(7.5,7.5),
-    emitt_y=(0.027,0.027),
+    energy=(125,125),
+    espread=(1.9e-3,1.52e-3),
+    emitt_x=(10,10),
+    emitt_y=(0.035,0.035),
     sigma_z=(300,300),
-    beta_x=(11,11),
-    beta_y=(0.48,0.48),
+    beta_x=(13,13),
+    beta_y=(0.41,0.41),
     f_rep=5,
     n_b=1312,
 )
@@ -74,10 +74,10 @@ def run_point(beta_x, beta_y):
 
     # simulate
     guinea = gp.GuineaPig()
-    guinea.add_accelerator("LCF_CLIC", acc_conf)
+    guinea.add_accelerator("LCF_ILC", acc_conf)
     guinea.add_simulation("default", gp_setup)
 
-    simulation_result = guinea.simulate()
+    simulation_result = guinea.simulate(program="g++")
 
     # result row
     res = {
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     points = list(itertools.product(horBeta_range, verBeta_range))
     totalLoopTraversals = len(points)
     
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=16) as executor:
         futures = {
             executor.submit(run_point, *point): i
             for i, point in enumerate(points)
