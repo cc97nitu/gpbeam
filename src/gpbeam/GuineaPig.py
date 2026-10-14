@@ -16,7 +16,7 @@ from .Result import parse_guinea_output
 ##########################
 ### general config
 ##########################
-from .config import WORKDIR, EXECUTABLE_GUINEA_PLUSPLUS
+from .config import WORKDIR, GUINEA_PLUSPLUS, GUINEA_PIG2, normalize_program, executable
 
 
 def _promote_scalars(cls, raw_dict):
@@ -56,6 +56,8 @@ class GuineaPig:
 
     Holds multiple accelerator definitions and multiple simulation
     parameter sets.
+
+    program selects the executable: "guinea-pig++" (default) or "guinea-pig2".
     """
 
     accelerators: Dict[str, "AcceleratorConfig"] = field(default_factory=dict)
@@ -63,6 +65,11 @@ class GuineaPig:
 
     active_accelerator: Optional[str] = None
     active_simulation: Optional[str] = None
+
+    program: str = GUINEA_PLUSPLUS
+
+    def __post_init__(self):
+        self.program = normalize_program(self.program)
 
     # ============================================================
     # Basic management
@@ -265,7 +272,10 @@ class GuineaPig:
     # ============================================================
     # Run Guinea-Pig
     # ============================================================
-    def simulate(self, particles_1 = None, particles_2 = None, retain_files: bool = False):
+    def simulate(self, particles_1 = None, particles_2 = None, retain_files: bool = False, program: Optional[str] = None):
+        # program: overrides self.program for this call only
+        program = normalize_program(self.program if program is None else program)
+
         unique_id = abs(hash((os.getpid(), time.time())))
         cur_workdir = os.path.normpath(WORKDIR +"/workdir_guinea_" + str(unique_id))
         os.makedirs(cur_workdir, exist_ok=False)
@@ -295,10 +305,10 @@ class GuineaPig:
         self.save(os.path.join(cur_workdir, "acc.dat"))
                   
         # call guinea <- guinea seems to read from stdin always as interactive program <- feed it with fake stdin
-        out_file = os.path.join(cur_workdir, "g++_result.out")
+        out_file = os.path.join(cur_workdir, "g2_result.out" if program == GUINEA_PIG2 else "g++_result.out")
         with open(os.devnull, "r") as nullin:
             result = subprocess.run(
-                [EXECUTABLE_GUINEA_PLUSPLUS(), self.active_accelerator, self.active_simulation, out_file],
+                [executable(program), self.active_accelerator, self.active_simulation, out_file],
                 stdin=nullin,
                 stdout=subprocess.PIPE,    # Capture stdout
                 stderr=subprocess.STDOUT,  # Capture stderr too
@@ -307,7 +317,7 @@ class GuineaPig:
                 check=True
             )
         
-        simulation_result = parse_guinea_output(out_file)
+        simulation_result = parse_guinea_output(out_file, program=program)
 
         if simulation_result.extra["miss"] > 0.3:
             print("Warning: particles outside of grid, miss rate = ", simulation_result.extra["miss"])
